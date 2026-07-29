@@ -13,7 +13,7 @@ export async function getBoardWithColumns(boardId: string): Promise<BoardWithCol
     .from("boards")
     .select(
       `
-        id, name, created_at,
+        id, name, created_at, owner_id,
         columns (
           id, name, position,
           tasks (

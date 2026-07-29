@@ -19,6 +19,7 @@ Baseado no design do [Frontend Mentor - Kanban Task Management](https://www.fron
 - **Subtarefas** por tarefa, com progresso (`x/y concluídas`)
 - **Colaboração em tempo real**: mudanças em tarefas de um board propagam via Supabase Realtime para todos conectados naquele board
 - **Conflito de edição**: cada tarefa tem uma coluna `version`, incrementada automaticamente por trigger a cada `UPDATE`. Editar um título envia a versão lida junto — se alguém mais já tiver salvo uma mudança, o update atinge 0 linhas e a UI avisa o conflito em vez de sobrescrever silenciosamente
+- **Convite de membros**: o owner convida por e-mail; a resolução e-mail → usuário roda numa function `security definer` (`invite_board_member`), já que a RLS de `profiles` não deixa um membro qualquer ler o e-mail de outra pessoa
 
 ## Setup local
 
@@ -31,7 +32,8 @@ Baseado no design do [Frontend Mentor - Kanban Task Management](https://www.fron
 
 ## Testes
 
-`npm test` roda os testes unitários da lógica de posicionamento e detecção de conflito (`src/features/tasks/position.ts`) — a parte testável sem precisar de banco.
+- `npm test` roda os testes unitários da lógica de posicionamento e detecção de conflito (`src/features/tasks/position.ts`) — a parte testável sem precisar de banco. É isso que roda no CI (`.github/workflows/ci.yml`).
+- `npm run test:integration` exercita o cenário real de conflito de edição concorrente contra o Supabase local (duas escritas na mesma tarefa, validando que a segunda é rejeitada por versão desatualizada). Exige `npx supabase start` rodando e `.env.local` preenchido (passos 2-3 do Setup local) — por isso não roda no CI.
 
 ## Status atual
 
@@ -40,6 +42,4 @@ Fluxo funcional de ponta a ponta: login/cadastro → criar board → criar colun
 ## Próximos passos
 
 - [ ] Aplicar o design do Frontend Mentor (atualmente só tem uma UI funcional, sem o visual do desafio)
-- [ ] Convite de membros para um board (hoje só o owner tem acesso — a tabela `board_members` já suporta múltiplos membros, falta a UI de convite)
-- [ ] Testes de integração para as server actions (hoje só a lógica pura tem testes)
 - [ ] Deploy (Vercel + Supabase Cloud)

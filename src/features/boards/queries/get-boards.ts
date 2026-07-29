@@ -6,7 +6,7 @@ export async function getBoards(): Promise<BoardSummary[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("boards")
-    .select("id, name, created_at")
+    .select("id, name, created_at, owner_id")
     .order("created_at", { ascending: false });
 
   if (error) {

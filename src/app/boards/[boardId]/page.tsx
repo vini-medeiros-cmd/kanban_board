@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getBoardWithColumns } from "@/features/boards/queries/get-board-with-columns";
 import { createColumn } from "@/features/boards/actions/create-column";
 import { BoardView } from "@/features/boards/components/board-view";
+import { InviteMemberForm } from "@/features/boards/components/invite-member-form";
 
 export default async function BoardPage({
   params,
@@ -41,6 +42,8 @@ export default async function BoardPage({
           </Link>
           <h1 className="text-2xl font-bold">{board.name}</h1>
         </div>
+
+        {board.owner_id === user.id && <InviteMemberForm boardId={board.id} />}
 
         <form
           action={async (formData: FormData) => {
